@@ -1,5 +1,5 @@
 /**
- * 接食材 — 介面與互動。Canvas 渲染，觸控／滑鼠移動菜藍。
+ * 接食材 — 介面與互動。Canvas 渲染，觸控／滑鼠移動菜籃。
  */
 import { newGame, update, WIDTH, HEIGHT, BASKET_W } from "./game.js";
 import { FoodcatchAudio } from "./audio.js";
@@ -127,7 +127,7 @@ function draw() {
       ctx.fill();
     }
   }
-  // 菜藍
+  // 菜籃
   const b = game.basket;
   ctx.fillStyle = "#e8c069";
   ctx.fillRect(b.x - 6, HEIGHT - 20, b.w + 12, 14);

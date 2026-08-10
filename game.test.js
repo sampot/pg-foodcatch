@@ -61,7 +61,7 @@ describe("update", () => {
     for (const it of g.items) expect(it.y).toBeGreaterThan(-30);
   });
 
-  it("炸彈碰到菜藍扣命並產 bomb 事件", () => {
+  it("炸彈碰到菜籃扣命並產 bomb 事件", () => {
     const g = newGame();
     g.items.push({
       x: WIDTH / 2,
