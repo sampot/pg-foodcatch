@@ -1,0 +1,44 @@
+<!doctype html>
+<html lang="zh-Hant">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#12202c" />
+    <title>接食材</title>
+    <meta
+      name="description"
+      content="接食材——移動菜藍接住掉下來的食物，別碰到壞掉的番茄！街機式反應遊戲。"
+    />
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🍆</text></svg>" />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <header class="topbar">
+      <h1>接食材</h1>
+      <button id="btn-mute" type="button" class="ghost" aria-label="切換音效">音效開</button>
+    </header>
+
+    <main class="game">
+      <div class="hud">
+        <span class="chip">得分 <b id="score">0</b></span>
+        <span class="chip">生命 <b id="lives">❤❤❤</b></span>
+        <span class="chip">連擊 <b id="combo">×1</b></span>
+        <span class="chip">等級 <b id="level">1</b></span>
+      </div>
+
+      <div class="stage">
+        <canvas id="game" class="canvas" width="360" height="520"></canvas>
+      </div>
+
+      <p id="status" class="status">按「開始」接食材。</p>
+
+      <button id="btn-start" type="button" class="primary">開始</button>
+
+      <footer class="meta">
+        <span>最佳紀錄：<b id="best-label">—</b></span>
+      </footer>
+    </main>
+
+    <script type="module" src="app.js"></script>
+  </body>
+</html>
