@@ -1,141 +1,484 @@
-/* 接食材 — 行動優先 */
+/* 接食材 — 手機優先：預設就是窄螢幕的直式版面，大螢幕再往上加。 */
+
 :root {
-  --bg: #0e1a24;
-  --bg2: #12202c;
-  --card: #1b3141;
-  --ink: #eef6fb;
-  --muted: #8fa8ba;
-  --accent: #e8c069;
-  --accent2: #5ad1b8;
-  --danger: #ff5d6c;
+  --bg: #0b141c;
+  --bg-2: #101f2b;
+  --card: #16293780;
+  --card-solid: #162937;
+  --ink: #eff7fc;
+  --muted: #93aec2;
+  --accent: #f2c14e;
+  --accent-2: #4fd1b0;
+  --danger: #ff6b7a;
   --line: rgba(255, 255, 255, 0.1);
+  --radius: 14px;
+  --tap: 46px;
 }
+
 * {
   box-sizing: border-box;
 }
+
 html,
 body {
   margin: 0;
   padding: 0;
-}
-body {
-  background:
-    radial-gradient(900px 480px at 50% -10%, rgba(90, 209, 184, 0.12), transparent 55%),
-    var(--bg);
-  color: var(--ink);
-  font-family: system-ui, -apple-system, "PingFang TC", "Noto Sans TC", sans-serif;
-  min-height: 100dvh;
-  display: flex;
-  flex-direction: column;
+  height: 100%;
+  overscroll-behavior: none;
 }
 
+body {
+  background:
+    radial-gradient(900px 460px at 50% -12%, rgba(79, 209, 176, 0.14), transparent 60%),
+    var(--bg);
+  color: var(--ink);
+  font-family: system-ui, -apple-system, "PingFang TC", "Noto Sans TC", "Segoe UI", sans-serif;
+  display: flex;
+  flex-direction: column;
+  min-height: 100dvh;
+  -webkit-text-size-adjust: 100%;
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* ── 頂列 ─────────────────────────────────────────── */
 .topbar {
   display: flex;
   align-items: center;
-  padding: 14px 16px 10px;
+  gap: 8px;
+  padding: max(8px, env(safe-area-inset-top)) 12px 6px;
 }
+
 .topbar h1 {
   margin: 0;
-  font-size: 22px;
-  letter-spacing: 0.06em;
   margin-right: auto;
-}
-.ghost {
-  background: none;
-  border: 1px solid var(--line);
-  color: var(--muted);
-  font-size: 13px;
-  padding: 8px 12px;
-  border-radius: 999px;
-  cursor: pointer;
+  font-size: 19px;
+  letter-spacing: 0.08em;
 }
 
-.game {
-  width: min(460px, 100%);
+.topbar-actions {
+  display: flex;
+  gap: 6px;
+}
+
+.icon-btn {
+  min-width: var(--tap);
+  min-height: var(--tap);
+  display: grid;
+  place-items: center;
+  font-size: 18px;
+  background: var(--card);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  color: var(--ink);
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.icon-btn[aria-pressed="false"] {
+  opacity: 0.45;
+}
+
+.icon-btn:disabled {
+  opacity: 0.3;
+  cursor: default;
+}
+
+/* ── 版面骨架 ──────────────────────────────────────── */
+.shell {
+  flex: 1;
+  min-height: 0;
+  width: min(560px, 100%);
   margin: 0 auto;
-  padding: 0 14px 30px;
+  padding: 0 12px max(12px, env(safe-area-inset-bottom));
   display: flex;
   flex-direction: column;
-  gap: 12px;
-  align-items: center;
-}
-
-.hud {
-  width: 100%;
-  display: flex;
   gap: 8px;
-  flex-wrap: wrap;
-}
-.chip {
-  flex: 1;
-  background: var(--card);
-  border: 1px solid var(--line);
-  border-radius: 10px;
-  padding: 8px 10px;
-  font-size: 13px;
-  color: var(--muted);
-  text-align: center;
-  white-space: nowrap;
-}
-.chip b {
-  color: var(--accent);
-  font-size: 15px;
 }
 
-.stage {
-  width: 100%;
-  display: flex;
-  justify-content: center;
+/* ── HUD ─────────────────────────────────────────── */
+.hud {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
 }
-.canvas {
-  width: 100%;
-  max-width: 420px;
-  border-radius: 16px;
-  background: var(--bg2);
+
+.stat {
+  background: var(--card);
   border: 1px solid var(--line);
-  touch-action: none;
+  border-radius: 12px;
+  padding: 6px 4px;
+  text-align: center;
+  min-width: 0;
+}
+
+.stat-label {
   display: block;
+  font-size: 11px;
+  color: var(--muted);
+  letter-spacing: 0.06em;
 }
 
-.status {
-  width: 100%;
-  margin: 0;
-  padding: 12px 14px;
-  border-radius: 14px;
-  background: var(--card);
-  border: 1px solid var(--line);
+.stat b {
+  display: block;
+  font-size: 18px;
+  line-height: 1.15;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.stat i {
+  font-style: normal;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.stat.is-hot b {
+  color: var(--accent-2);
+}
+
+.stat.is-urgent b {
+  color: var(--danger);
+}
+
+.bars {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.lives {
+  display: flex;
+  gap: 2px;
   font-size: 15px;
-  line-height: 1.5;
-  min-height: 48px;
+  line-height: 1;
+}
+
+.heart.spent {
+  filter: grayscale(1);
+  opacity: 0.28;
+}
+
+.goal-track {
+  flex: 1;
+  height: 8px;
+  border-radius: 999px;
+  background: var(--card-solid);
+  border: 1px solid var(--line);
+  overflow: hidden;
+}
+
+.goal-track i {
+  display: block;
+  height: 100%;
+  width: 0%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, var(--accent-2), var(--accent));
+  transition: width 0.18s ease-out;
+}
+
+.goal-track.is-endless {
+  opacity: 0.25;
+}
+
+/* ── 舞台 ─────────────────────────────────────────── */
+.stage {
+  position: relative;
+  flex: 1;
+  min-height: 200px;
+}
+
+/* 畫布用絕對定位置中：尺寸由 JS 依容器算，才不會回頭把容器撐大。 */
+#board {
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  transform: translate(-50%, -50%);
+  display: block;
+  border-radius: var(--radius);
+  border: 1px solid var(--line);
+  background: #0d1a24;
+  touch-action: none;
+  cursor: grab;
+}
+
+#board:active {
+  cursor: grabbing;
+}
+
+/* ── 頁內面板（絕不使用瀏覽器原生 dialog） ────────────── */
+.overlay {
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  padding: 10px;
+  background: rgba(8, 16, 22, 0.78);
+  backdrop-filter: blur(3px);
+  border-radius: var(--radius);
+}
+
+.overlay[hidden] {
+  display: none;
+}
+
+.panel {
+  width: min(340px, 100%);
+  max-height: 100%;
+  overflow-y: auto;
+  background: var(--card-solid);
+  border: 1px solid var(--line);
+  border-radius: var(--radius);
+  padding: 16px 14px;
   text-align: center;
+  box-shadow: 0 18px 44px rgba(0, 0, 0, 0.45);
 }
-.status[data-tone="win"] {
-  color: #e2ffef;
-  background: rgba(90, 209, 184, 0.16);
-  border-color: rgba(90, 209, 184, 0.5);
+
+.panel h2 {
+  margin: 0 0 6px;
+  font-size: 20px;
+}
+
+.panel h2[data-tone="win"] {
+  color: var(--accent-2);
+}
+
+.panel h2[data-tone="lose"] {
+  color: var(--danger);
+}
+
+.panel-body {
+  margin: 0 0 12px;
+  font-size: 14px;
+  line-height: 1.6;
+  color: var(--muted);
+}
+
+.panel-stats {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 6px;
+  margin: 0 0 12px;
+  text-align: left;
+}
+
+.panel-stats[hidden] {
+  display: none;
+}
+
+.panel-stats div {
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 6px 9px;
+}
+
+.panel-stats dt {
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.panel-stats dd {
+  margin: 0;
+  font-size: 15px;
   font-weight: 700;
+  font-variant-numeric: tabular-nums;
 }
-.status[data-tone="lose"] {
-  color: #ffdbe0;
-  background: rgba(255, 93, 108, 0.16);
-  border-color: rgba(255, 93, 108, 0.5);
+
+.modes {
+  display: grid;
+  gap: 6px;
+  margin-bottom: 12px;
+}
+
+.modes[hidden] {
+  display: none;
+}
+
+.mode {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  min-height: var(--tap);
+  padding: 8px 12px;
+  border-radius: 12px;
+  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.03);
+  color: var(--muted);
+  text-align: left;
+  cursor: pointer;
+  touch-action: manipulation;
+}
+
+.mode b {
+  font-size: 15px;
+  color: var(--ink);
+}
+
+.mode span {
+  font-size: 12px;
+}
+
+.mode[aria-checked="true"] {
+  border-color: var(--accent-2);
+  background: rgba(79, 209, 176, 0.14);
+}
+
+.panel-actions {
+  display: grid;
+  gap: 8px;
+}
+
+.primary,
+.ghost {
+  min-height: 50px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 700;
+  cursor: pointer;
+  touch-action: manipulation;
+  border: 1px solid transparent;
 }
 
 .primary {
-  width: 100%;
-  font-size: 17px;
-  font-weight: 700;
-  padding: 14px 0;
-  border-radius: 14px;
-  border: none;
-  background: var(--accent2);
+  background: var(--accent-2);
   color: #06302a;
+  border: none;
+}
+
+.ghost {
+  background: transparent;
+  border-color: var(--line);
+  color: var(--muted);
+}
+
+.ghost[hidden] {
+  display: none;
+}
+
+/* ── 場上飄字 ─────────────────────────────────────── */
+.toast {
+  position: absolute;
+  left: 50%;
+  top: 12px;
+  transform: translate(-50%, -14px);
+  padding: 7px 14px;
+  border-radius: 999px;
+  background: rgba(11, 20, 28, 0.9);
+  border: 1px solid var(--line);
+  font-size: 13px;
+  font-weight: 700;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    opacity 0.2s ease,
+    transform 0.2s ease;
+}
+
+.toast.show {
+  opacity: 1;
+  transform: translate(-50%, 0);
+}
+
+.toast[data-tone="good"] {
+  color: var(--accent-2);
+  border-color: rgba(79, 209, 176, 0.5);
+}
+
+.toast[data-tone="bad"] {
+  color: var(--danger);
+  border-color: rgba(255, 107, 122, 0.5);
+}
+
+/* ── 觸控左右鈕 ───────────────────────────────────── */
+.pad {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 10px;
+}
+
+.pad-btn {
+  min-height: 60px;
+  border-radius: 14px;
+  border: 1px solid var(--line);
+  background: var(--card);
+  color: var(--ink);
+  font-size: 22px;
   cursor: pointer;
-  touch-action: manipulation;
-  min-height: 52px;
+  touch-action: none;
+  user-select: none;
+}
+
+.pad-btn.is-down {
+  background: rgba(79, 209, 176, 0.2);
+  border-color: var(--accent-2);
+}
+
+.hint,
+.meta {
+  margin: 0;
+  color: var(--muted);
+  font-size: 11.5px;
+  text-align: center;
+  line-height: 1.5;
 }
 
 .meta {
-  color: var(--muted);
-  font-size: 13px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 4px 12px;
+}
+
+.meta b {
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+/* ── 矮螢幕：把非必要的字收起來，把高度留給球場 ───────── */
+@media (max-height: 660px) {
+  .hint {
+    display: none;
+  }
+
+  .pad-btn {
+    min-height: 52px;
+  }
+}
+
+/* ── 較寬的螢幕：面板與 HUD 放鬆一點 ─────────────────── */
+@media (min-width: 560px) {
+  .topbar h1 {
+    font-size: 22px;
+  }
+
+  .stat b {
+    font-size: 20px;
+  }
+
+  .modes {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .panel-actions {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .panel-actions .primary {
+    grid-column: 1 / -1;
+  }
+}
+
+/* 有鍵盤與滑鼠的大螢幕不需要虛擬方向鍵，但仍保留（觸控筆電也算數）。 */
+@media (min-width: 900px) and (pointer: fine) {
+  .pad {
+    max-width: 320px;
+    margin: 0 auto;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .toast,
+  .goal-track i {
+    transition: none;
+  }
 }

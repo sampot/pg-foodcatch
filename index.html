@@ -2,40 +2,104 @@
 <html lang="zh-Hant">
   <head>
     <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#12202c" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+    <meta name="theme-color" content="#0d1a24" />
     <title>接食材</title>
     <meta
       name="description"
-      content="接食材——移動菜籃接住掉下來的食物，別碰到壞掉的番茄！街機式反應遊戲。"
+      content="接食材——左右移動菜籃接住掉下來的食物，讓壞掉的番茄落地。連擊加倍、每 20 秒升級的街機反應遊戲。"
     />
-    <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧺</text></svg>" />
+    <link
+      rel="icon"
+      href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🧺</text></svg>"
+    />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <header class="topbar">
       <h1>接食材</h1>
-      <button id="btn-mute" type="button" class="ghost" aria-label="切換音效">音效開</button>
+      <div class="topbar-actions">
+        <button id="btn-sound" type="button" class="icon-btn" aria-pressed="true" aria-label="音效開關">
+          <span aria-hidden="true">🔊</span>
+        </button>
+        <button id="btn-pause" type="button" class="icon-btn" aria-label="暫停" disabled>
+          <span aria-hidden="true">⏸</span>
+        </button>
+      </div>
     </header>
 
-    <main class="game">
-      <div class="hud">
-        <span class="chip">得分 <b id="score">0</b></span>
-        <span class="chip">生命 <b id="lives">❤❤❤</b></span>
-        <span class="chip">連擊 <b id="combo">×1</b></span>
-        <span class="chip">等級 <b id="level">1</b></span>
+    <main class="shell">
+      <section class="hud" aria-label="狀態">
+        <div class="stat stat-score">
+          <span class="stat-label">得分</span>
+          <b id="stat-score">0</b>
+          <i id="stat-goal">／1500</i>
+        </div>
+        <div class="stat">
+          <span class="stat-label">剩餘</span>
+          <b id="stat-time">1:30</b>
+        </div>
+        <div class="stat">
+          <span class="stat-label">連擊</span>
+          <b id="stat-combo">0</b>
+          <i id="stat-mult">×1</i>
+        </div>
+        <div class="stat">
+          <span class="stat-label">等級</span>
+          <b id="stat-level">1</b>
+        </div>
+      </section>
+
+      <div class="bars">
+        <div class="lives" id="lives" role="img" aria-label="生命 3">
+          <span class="heart">🍅</span><span class="heart">🍅</span><span class="heart">🍅</span>
+        </div>
+        <div class="goal-track" id="goal-track">
+          <i id="goal-fill"></i>
+        </div>
       </div>
 
-      <div class="stage">
-        <canvas id="game" class="canvas" width="360" height="520"></canvas>
+      <div class="stage" id="stage">
+        <canvas id="board" aria-label="遊戲畫面"></canvas>
+
+        <div class="overlay" id="overlay">
+          <div class="panel" role="group" aria-labelledby="panel-title">
+            <h2 id="panel-title">接食材</h2>
+            <p id="panel-body" class="panel-body"></p>
+            <dl id="panel-stats" class="panel-stats" hidden></dl>
+            <div id="panel-modes" class="modes" role="radiogroup" aria-label="模式">
+              <button type="button" class="mode" data-mode="goal" role="radio" aria-checked="true">
+                <b>目標賽</b><span>90 秒內 1500 分</span>
+              </button>
+              <button type="button" class="mode" data-mode="endless" role="radio" aria-checked="false">
+                <b>無盡</b><span>沒有時限，拚最高分</span>
+              </button>
+            </div>
+            <div class="panel-actions">
+              <button id="btn-primary" type="button" class="primary">開始</button>
+              <button id="btn-secondary" type="button" class="ghost" hidden></button>
+            </div>
+          </div>
+        </div>
+
+        <div class="toast" id="toast" aria-live="polite"></div>
       </div>
 
-      <p id="status" class="status">按「開始」接食材。</p>
+      <div class="pad" aria-label="操作">
+        <button id="pad-left" type="button" class="pad-btn" aria-label="向左移動">
+          <span aria-hidden="true">◀</span>
+        </button>
+        <button id="pad-right" type="button" class="pad-btn" aria-label="向右移動">
+          <span aria-hidden="true">▶</span>
+        </button>
+      </div>
 
-      <button id="btn-start" type="button" class="primary">開始</button>
+      <p class="hint" id="hint">在畫面上左右拖曳移動菜籃；也可以按住 ◀ ▶ 或鍵盤 ← →。</p>
 
       <footer class="meta">
-        <span>最佳紀錄：<b id="best-label">—</b></span>
+        <span>目標賽最佳 <b id="best-goal">—</b></span>
+        <span>無盡最佳 <b id="best-endless">—</b></span>
+        <span>最長連擊 <b id="best-combo">—</b></span>
       </footer>
     </main>
 
